@@ -1,0 +1,10 @@
+_
+|\
+|X\
+|XX\
+|xxx\
+|xxxx\ 
+|xxxxx\
+|xxxxxx\ 
+|xxxxxxx\
+|xxxxxxxx\

@@ -1,0 +1,28 @@
+@startuml Si
+
+
+
+class Fifa
+class Humanos
+class Jugador
+class Bocha
+class Portero
+class Porteria
+class Ventana
+class Actualizable
+class Dibujo
+class Juegos 
+
+Humanos o-- Juegos
+Fifa --|> Juegos
+Fifa *-- Jugador
+Fifa *-- Porteria
+Fifa *-- Portero
+Fifa *-- Bocha
+Fifa o-- Ventana
+Fifa o-- Dibujo
+Fifa o-- Actualizable
+Portero o-- Porteria
+Jugador o-- Bocha
+
+@enduml

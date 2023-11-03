@@ -1,52 +1,84 @@
-#include <iostream>
-#include <Mascota.hpp>
+#include <Dibujo.hpp>
+#include <Ventana.hpp>
+#include <list>
+#include <curses.h>
+#include <Portero.hpp>
+#include <Porteria.hpp>
+#include <Bocha.hpp>
+#include <Jugador.hpp>
 
 using namespace std;
 
 int main(int argc, char const *argv[])
 {
-    // Mascota m1;
-    // Mascota m2;
 
-    // m1.Comer();
-    // m2.Comer();
+   Ventana ventana;
+   Portero *portero = new Portero(109, 5);
+   Porteria *porteria = new Porteria(115, 0);
+   Jugador* jugador = new Jugador();
+   Bocha* bocha = new Bocha(10,8);
 
-    cout << "Tipos de datos" << endl;
-    cout << "int" << sizeof(int) << endl;
-    cout << "char" << sizeof(char) << endl;
-    cout << "bool" << sizeof(bool) << endl;
-    cout << "float" << sizeof(float) << endl;
-    cout << "double" << sizeof(double) << endl;
-    cout << "Mascota" << sizeof(Mascota) << endl;
 
-    int a = 4;
-    cout << "Direcciones de memoria" << endl;
-    cout << "tamaño" << sizeof(a) << endl;
-    cout << "contenido" << a << endl;
-    cout << "direccion" << &a << endl;
+   list<Dibujo*> dibujos;
+   dibujos.push_back(portero);
+   dibujos.push_back(porteria);
+   dibujos.push_back(jugador);
+   dibujos.push_back(bocha);
 
-    void *puntero = malloc(32);
-    free(puntero);
+   list<Actualizable*> actualizables;
+   actualizables.push_back(portero);
+   actualizables.push_back(porteria);
+   actualizables.push_back(bocha);
+ 
+   
+   
+   while (true)
+   {
 
-    cout << "Direcciones de memoria" << endl;
-    cout << "size of: " << sizeof(puntero) << endl;
-    cout << "puntero1:" << puntero << endl;
-    cout << "puntero2:" << &puntero << endl;
+      int key = getch();
+      if (key == 'q' || key == 'q')
+      {
+         // Salir del juego
+         break;
+      }
 
-    // memoria dinámica en C
-    cout << "Mascota en C: " << endl;
-    Mascota *MascotaC = (Mascota *)malloc(sizeof(Mascota));
-    MascotaC->Inicializar();
-    MascotaC->DecirNombre();
-    MascotaC->Destruir();
-    free(MascotaC);
+      if (key==KEY_LEFT)
+      {
+         portero->DesplazarIzquierda();
+      } 
 
-    // cout << "Tamaño Puntero: " << sizeof(Mascota) << endl;
-    //  Memoria dinámica en C++
-    cout << "Mascota en C++: " << endl;
-    Mascota *MascotaCPP = new Mascota();
-    MascotaCPP->DecirNombre();
-    delete MascotaCPP;
-    // std::cout<<"I changed de time zone, but what do i know"<<std::endl;
-    return 0;
+      if (key==KEY_RIGHT)
+      {
+         portero->DesplazarDerecha();
+      }
+
+      if (key==KEY_DOWN)
+      {
+         portero->DesplazarAbajo();
+      } 
+
+      if (key==KEY_UP)
+      {
+         portero->DesplazarArriba();
+      }
+
+      if(key == 'p')
+      {
+         bocha->CambiarDireccion();
+      }
+
+      if(key == 'w')
+      {
+         bocha->DesplazarArriba();
+      }
+
+      if(key == 's')
+      {
+         bocha->DesplazarAbajo();
+      }
+      ventana.Dibujar(dibujos);
+      ventana.Actualizar(actualizables);
+   }
+
+   return 0;
 }
