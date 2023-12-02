@@ -1,8 +1,8 @@
 #include <chipmunk/chipmunk.h>
 
-class Ball {
+class Pelota {
 public:
-    Ball(cpSpace* space, float radius, float mass, const cpVect& position) {
+    Pelota(cpSpace* space, float radius, float mass, const cpVect& position) {
         cpFloat moment = cpMomentForCircle(mass, 0, radius, cpvzero);
         body = cpSpaceAddBody(space, cpBodyNew(mass, moment));
         cpBodySetPosition(body, position);
@@ -18,7 +18,7 @@ public:
         return ballShape;
     }
 
-    ~Ball() {
+    ~Pelota() {
         cpShapeFree(shape);
         cpBodyFree(body);
     }

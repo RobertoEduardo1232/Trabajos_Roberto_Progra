@@ -1,6 +1,6 @@
-class GameWindow {
+class VentanadeJuego {
 public:
-    GameWindow(int width, int height, const std::string& title) {
+    VentanadeJuego(int width, int height, const std::string& title) {
         window.create(sf::VideoMode(width, height), title);
     }
 
