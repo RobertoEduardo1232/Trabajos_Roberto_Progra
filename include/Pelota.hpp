@@ -1,4 +1,5 @@
 #include <chipmunk/chipmunk.h>
+#include <SFML/Graphics.hpp>
 
 class Pelota {
 public:

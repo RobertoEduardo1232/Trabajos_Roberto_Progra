@@ -2,6 +2,7 @@
 #include <Dibujo.hpp>
 #include <Actualizable.hpp>
 #include <Jugador.hpp>
+#include <SFML/Graphics.hpp>
 
 class Porteria : public Dibujo, public Actualizable
 {

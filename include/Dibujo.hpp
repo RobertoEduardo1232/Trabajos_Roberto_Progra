@@ -2,7 +2,8 @@
 #include <fstream>
 #include <string>
 #include <iostream>
-#include <ncurses.h>
+#include <SFML/Graphics.hpp>
+
 
 class Dibujo
 {

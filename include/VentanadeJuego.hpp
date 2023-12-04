@@ -1,37 +1,33 @@
+#include <SFML/Graphics.hpp>
+
 class VentanadeJuego {
 public:
-    VentanadeJuego(int width, int height, const std::string& title) {
-        window.create(sf::VideoMode(width, height), title);
-    }
+   // Crear una ventana de SFML
+    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
 
-    bool isOpen() {
-        return window.isOpen();
-    }
+    // Crear una forma circular de SFML
+    sf::CircleShape shape(100.f);
+    shape.setFillColor(sf::Color::Green);
 
-    void close() {
-        window.close();
-    }
+    while (window.isOpen())
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            // Verificar si se ha cerrado la ventana
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
 
-    void clear() {
+        // Limpiar la ventana
         window.clear();
-    }
 
-    void display() {
+        // Dibujar la forma en la ventana
+        window.draw(shape);
+
+        // Mostrar la ventana
         window.display();
     }
 
-    void draw(sf::Shape& shape) {
-        window.draw(shape);
-    }
-
-    bool pollEvent(sf::Event& event) {
-        return window.pollEvent(event);
-    }
-
-    sf::Vector2u getSize() {
-        return window.getSize();
-    }
-
-private:
-    sf::RenderWindow window;
+    return 0;
 };

@@ -1,6 +1,7 @@
 #pragma once
 #include<Dibujo.hpp>
 #include<Actualizable.hpp>
+#include <SFML/Graphics.hpp>
 
 using namespace std;
 class Jugador : public Dibujo
