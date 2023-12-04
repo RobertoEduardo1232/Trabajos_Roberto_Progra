@@ -7,7 +7,7 @@ using namespace std;
 int main()
 {
     
-     int fuerza = 100, fuerzaPortero=100000;
+     int fuerza = 30, fuerzaPortero=40000;
 
     // Crear una ventana de SFML
     sf::RenderWindow ventana(sf::VideoMode(1200, 800), "Simulador de Penales");
@@ -16,7 +16,7 @@ int main()
     b2Vec2 vectorGravedad(0.0f, 7.0f);
     b2World mundo(vectorGravedad);
 
-// Crear un suelo estático
+    // Crear un suelo estático
     b2BodyDef cuerpoPaloDef;
     cuerpoPaloDef.position.Set(1100, 300.0f); // Posición del centro del cuerpo
     b2Body *cuerpoPalo = mundo.CreateBody(&cuerpoPaloDef);
@@ -147,6 +147,8 @@ int main()
             cuerpoBola->SetTransform(b2Vec2(posicionBola.x, limiteSuperior), cuerpoBola->GetAngle());
         if (posicionBola.y > limiteInferior)
             cuerpoBola->SetTransform(b2Vec2(posicionBola.x, limiteInferior), cuerpoBola->GetAngle());
+
+    
 
         // Actualizar el mundo de Box2D
         // Ajustar el valor de 1.0 / 60.0 para cambiar la velocidad de la simulación física
