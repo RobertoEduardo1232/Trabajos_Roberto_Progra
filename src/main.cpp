@@ -7,7 +7,7 @@ using namespace std;
 int main()
 {
     
-     int fuerza = 1, fuerzaPortero=1000;
+     int fuerza = 100, fuerzaPortero=100000;
 
     // Crear una ventana de SFML
     sf::RenderWindow ventana(sf::VideoMode(1200, 800), "Simulador de Penales");
@@ -57,8 +57,8 @@ int main()
     // Agregar la forma al cuerpo
     b2FixtureDef fixtureRectanguloDef;
     fixtureRectanguloDef.shape = &formaRectangulo;
-    fixtureRectanguloDef.density = 100.0f;
-    fixtureRectanguloDef.friction = 1.0f;
+    fixtureRectanguloDef.density = 20.0f;
+    fixtureRectanguloDef.friction = 0.007f;
     cuerpoRectangulo->CreateFixture(&fixtureRectanguloDef);
    
 
@@ -96,7 +96,7 @@ int main()
     // Agregar la forma al cuerpo
     b2FixtureDef fixtureBolaDef;
     fixtureBolaDef.shape = &formaBola;
-    fixtureBolaDef.density = 0.01f;
+    fixtureBolaDef.density = 0.1f;
     fixtureBolaDef.friction = 0.7f;
     cuerpoBola->CreateFixture(&fixtureBolaDef);
 
@@ -123,16 +123,13 @@ int main()
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
             cuerpoBola->ApplyLinearImpulse(b2Vec2(0, fuerza), cuerpoBola->GetWorldCenter(), true);
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-        cuerpoRectangulo->ApplyLinearImpulse(b2Vec2(-fuerzaPortero, 0), cuerpoRectangulo->GetWorldCenter(), true);
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-        cuerpoRectangulo->ApplyLinearImpulse(b2Vec2(fuerzaPortero, 0), cuerpoRectangulo->GetWorldCenter(), true);
+        // Controlar el portero con el teclado
+   
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
         cuerpoRectangulo->ApplyLinearImpulse(b2Vec2(0, -fuerzaPortero), cuerpoRectangulo->GetWorldCenter(), true);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
         cuerpoRectangulo->ApplyLinearImpulse(b2Vec2(0, fuerzaPortero), cuerpoRectangulo->GetWorldCenter(), true);
-        
-
+ 
         
         // Restringir los límites de la bola a los límites de la pantalla
         b2Vec2 posicionBola = cuerpoBola->GetPosition();
