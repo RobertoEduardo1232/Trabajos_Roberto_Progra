@@ -7,34 +7,31 @@ using namespace std;
 int main()
 {
     
-     int fuerza = 30, fuerzaPortero=40000;
+     int fuerza = 12, fuerzaPortero=40000;
 
-    // Crear una ventana de SFML
+    // Crear una ventana 
     sf::RenderWindow ventana(sf::VideoMode(1200, 800), "Simulador de Penales");
 
-    // Crear un mundo de Box2D
+    // Crear un mundo 
     b2Vec2 vectorGravedad(0.0f, 7.0f);
     b2World mundo(vectorGravedad);
 
-    // Crear un suelo estático
+    // Crear un suelo 
     b2BodyDef cuerpoPaloDef;
     cuerpoPaloDef.position.Set(1100, 300.0f); // Posición del centro del cuerpo
     b2Body *cuerpoPalo = mundo.CreateBody(&cuerpoPaloDef);
 
-    // Crear una forma rectangular
+    // Crear una forma para el palo de la porteria
     b2PolygonShape formaPalo;
     int PaloWidth = 30; // 600 pixeles de ancho
     int PaloHeight = 450;  // 10 pixeles de alto
     formaPalo.SetAsBox(PaloWidth / 2.0f, PaloHeight / 2.0f);
 
-
-
-
     b2BodyDef cuerpoSuperiorDef;
     cuerpoSuperiorDef.position.Set(1200, 100.0f); // Posición del centro del cuerpo
     b2Body *cuerpoSuperior = mundo.CreateBody(&cuerpoSuperiorDef);
 
-    // Crear una forma rectangular
+    // Crear una forma para el techo de la porteria
     b2PolygonShape formaSuperior;
     int SuperiorWidth = 115; // 600 pixeles de ancho
     int SuperiorHeight = 30;  // 10 pixeles de alto
@@ -42,7 +39,7 @@ int main()
    
 
 
-    // Crear un rectángulo en el lado derecho
+    // Crear un rectángulo como portero
     b2BodyDef cuerpoRectanguloDef;
     cuerpoRectanguloDef.type = b2_dynamicBody;
     cuerpoRectanguloDef.position.Set(1000.0f, 400.0f);
@@ -63,7 +60,7 @@ int main()
    
 
 
-    // Crear un suelo estático
+    // Crear un suelo 
     b2BodyDef cuerpoSueloDef;
     cuerpoSueloDef.position.Set(-400, 500.0f); // Posición del centro del cuerpo
     b2Body *cuerpoSuelo = mundo.CreateBody(&cuerpoSueloDef);
@@ -89,7 +86,7 @@ int main()
     cuerpoBolaDef.position.Set(400.0f, 300.0f);
     b2Body *cuerpoBola = mundo.CreateBody(&cuerpoBolaDef);
 
-    // Crear una forma circular
+    // Crear una forma circular para el balón
     b2CircleShape formaBola;
     formaBola.m_radius = 15.0f;
 
@@ -113,7 +110,7 @@ int main()
                 ventana.close();
         }
 
-        // Controlar la bola con el teclado
+        // Controlar el balón con el teclado
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
             cuerpoBola->ApplyLinearImpulse(b2Vec2(-fuerza, 0), cuerpoBola->GetWorldCenter(), true);
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
@@ -148,6 +145,10 @@ int main()
         if (posicionBola.y > limiteInferior)
             cuerpoBola->SetTransform(b2Vec2(posicionBola.x, limiteInferior), cuerpoBola->GetAngle());
 
+        // Restringir limites del portero a los límites de la pantalla
+        b2Vec2 posicionPortero = cuerpoRectangulo->GetPosition();
+         if (posicionPortero.y < limiteSuperior)
+            cuerpoRectangulo->SetTransform(b2Vec2(posicionPortero.x, limiteSuperior), cuerpoRectangulo->GetAngle());
     
 
         // Actualizar el mundo de Box2D
@@ -167,7 +168,7 @@ int main()
             cuerpoSuelo->GetPosition().y);
         ventana.draw(suelo);
 
-        // Dibujar la bola
+        // Dibujar el balón
         sf::CircleShape bola(formaBola.m_radius);
         bola.setOrigin(formaBola.m_radius, formaBola.m_radius);
         bola.setFillColor(sf::Color::White);
