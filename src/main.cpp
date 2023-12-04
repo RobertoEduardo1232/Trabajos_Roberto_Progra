@@ -7,17 +7,44 @@ using namespace std;
 int main()
 {
     
-     int fuerza = 1;
+     int fuerza = 1, fuerzaPortero=1000;
 
     // Crear una ventana de SFML
-    sf::RenderWindow ventana(sf::VideoMode(1200, 800), "Ejemplo de Fisica con Box2D y SFML");
+    sf::RenderWindow ventana(sf::VideoMode(1200, 800), "Simulador de Penales");
 
     // Crear un mundo de Box2D
     b2Vec2 vectorGravedad(0.0f, 7.0f);
     b2World mundo(vectorGravedad);
 
+// Crear un suelo estático
+    b2BodyDef cuerpoPaloDef;
+    cuerpoPaloDef.position.Set(1100, 300.0f); // Posición del centro del cuerpo
+    b2Body *cuerpoPalo = mundo.CreateBody(&cuerpoPaloDef);
+
+    // Crear una forma rectangular
+    b2PolygonShape formaPalo;
+    int PaloWidth = 30; // 600 pixeles de ancho
+    int PaloHeight = 450;  // 10 pixeles de alto
+    formaPalo.SetAsBox(PaloWidth / 2.0f, PaloHeight / 2.0f);
+
+
+
+
+    b2BodyDef cuerpoSuperiorDef;
+    cuerpoSuperiorDef.position.Set(1200, 100.0f); // Posición del centro del cuerpo
+    b2Body *cuerpoSuperior = mundo.CreateBody(&cuerpoSuperiorDef);
+
+    // Crear una forma rectangular
+    b2PolygonShape formaSuperior;
+    int SuperiorWidth = 115; // 600 pixeles de ancho
+    int SuperiorHeight = 30;  // 10 pixeles de alto
+    formaSuperior.SetAsBox(SuperiorWidth/ 2.0f, SuperiorHeight / 2.0f);
+   
+
+
     // Crear un rectángulo en el lado derecho
     b2BodyDef cuerpoRectanguloDef;
+    cuerpoRectanguloDef.type = b2_dynamicBody;
     cuerpoRectanguloDef.position.Set(1000.0f, 400.0f);
     b2Body *cuerpoRectangulo = mundo.CreateBody(&cuerpoRectanguloDef);
 
@@ -27,14 +54,15 @@ int main()
     int rectHeight = 150; // 200 pixeles de alto
     formaRectangulo.SetAsBox(rectWidth / 2.0f, rectHeight / 2.0f);
     
-
-
     // Agregar la forma al cuerpo
     b2FixtureDef fixtureRectanguloDef;
     fixtureRectanguloDef.shape = &formaRectangulo;
+    fixtureRectanguloDef.density = 100.0f;
     fixtureRectanguloDef.friction = 1.0f;
     cuerpoRectangulo->CreateFixture(&fixtureRectanguloDef);
    
+
+
     // Crear un suelo estático
     b2BodyDef cuerpoSueloDef;
     cuerpoSueloDef.position.Set(-400, 500.0f); // Posición del centro del cuerpo
@@ -53,6 +81,8 @@ int main()
     fixtureSueloDef.friction = 1.0f;
     cuerpoSuelo->CreateFixture(&fixtureSueloDef);
 
+
+
     // Crear un cuerpo dinámico
     b2BodyDef cuerpoBolaDef;
     cuerpoBolaDef.type = b2_dynamicBody;
@@ -69,6 +99,8 @@ int main()
     fixtureBolaDef.density = 0.01f;
     fixtureBolaDef.friction = 0.7f;
     cuerpoBola->CreateFixture(&fixtureBolaDef);
+
+
 
     // Bucle principal del juego
     while (ventana.isOpen())
@@ -91,6 +123,17 @@ int main()
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
             cuerpoBola->ApplyLinearImpulse(b2Vec2(0, fuerza), cuerpoBola->GetWorldCenter(), true);
 
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+        cuerpoRectangulo->ApplyLinearImpulse(b2Vec2(-fuerzaPortero, 0), cuerpoRectangulo->GetWorldCenter(), true);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+        cuerpoRectangulo->ApplyLinearImpulse(b2Vec2(fuerzaPortero, 0), cuerpoRectangulo->GetWorldCenter(), true);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+        cuerpoRectangulo->ApplyLinearImpulse(b2Vec2(0, -fuerzaPortero), cuerpoRectangulo->GetWorldCenter(), true);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+        cuerpoRectangulo->ApplyLinearImpulse(b2Vec2(0, fuerzaPortero), cuerpoRectangulo->GetWorldCenter(), true);
+        
+
+        
         // Restringir los límites de la bola a los límites de la pantalla
         b2Vec2 posicionBola = cuerpoBola->GetPosition();
         float radioBola = formaBola.m_radius;
@@ -119,6 +162,7 @@ int main()
         // Dibujar el suelo
         sf::RectangleShape suelo(sf::Vector2f(boxWidth, boxHeight));
         suelo.setOrigin(boxWidth / 8.0f, boxHeight / 2.0f); // El origen x,y está en el centro de la forma
+        suelo.setFillColor(sf::Color::Green);
         suelo.setPosition(
             cuerpoSuelo->GetPosition().x,
             cuerpoSuelo->GetPosition().y);
@@ -127,7 +171,7 @@ int main()
         // Dibujar la bola
         sf::CircleShape bola(formaBola.m_radius);
         bola.setOrigin(formaBola.m_radius, formaBola.m_radius);
-        bola.setFillColor(sf::Color::Red);
+        bola.setFillColor(sf::Color::White);
         bola.setPosition(
             cuerpoBola->GetPosition().x,
             cuerpoBola->GetPosition().y);
@@ -135,11 +179,28 @@ int main()
 
         sf::RectangleShape portero(sf::Vector2f(rectWidth, rectHeight));
         portero.setOrigin(rectWidth / 2.0f, rectHeight / 2.0f); // El origen x,y está en el centro de la forma
+        portero.setFillColor(sf::Color::Red);
         portero.setPosition(
             cuerpoRectangulo->GetPosition().x,
             cuerpoRectangulo->GetPosition().y);
         ventana.draw(portero);
 
+
+        sf::RectangleShape palo(sf::Vector2f(PaloWidth, PaloHeight));
+        palo.setOrigin(PaloWidth / 2.0f, PaloHeight / 2.0f); // El origen x,y está en el centro de la forma
+        palo.setFillColor(sf::Color::White);
+        palo.setPosition(
+            cuerpoPalo->GetPosition().x,
+            cuerpoPalo->GetPosition().y);
+        ventana.draw(palo);
+
+        sf::RectangleShape superior(sf::Vector2f(SuperiorWidth, SuperiorHeight));
+        superior.setOrigin(SuperiorWidth / 1.0f, SuperiorHeight / 1.0f); // El origen x,y está en el centro de la forma
+        superior.setFillColor(sf::Color::White);
+        superior.setPosition(
+            cuerpoSuperior->GetPosition().x,
+            cuerpoSuperior->GetPosition().y);
+        ventana.draw(superior);
 
         // Mostrar la ventana
         ventana.display();
